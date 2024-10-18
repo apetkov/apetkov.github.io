@@ -13,6 +13,7 @@
         padding: 1em;
         background-color: #f8f9fc;
         flex: 1 1 0;
+        margin: 0;
       }
 
       .description {
@@ -63,10 +64,12 @@
 
       <hr />
     </div>
-    <div id="itemList" class="container py-3"></div>
+
+    <div id="flashcard-container" class="container py-3"></div>
+
     <div class="container d-print-none">
       <div class="d-flex justify-content-center">
-        <button type="button" class="btn btn-primary" onclick="addItemFromUI()">
+        <button type="button" class="btn btn-primary" id="add-button">
           Add Flashcard
         </button>
         &nbsp;
@@ -86,7 +89,7 @@
         <button
           type="button"
           class="btn btn-sm btn-outline-danger"
-          onclick="addItemDummy()"
+          onclick="deleteAllFlashcards()"
         >
           Delete all Flashcards
         </button>
@@ -94,61 +97,77 @@
     </div>
 
     <script>
-      const uid = function () {
-        return Date.now().toString(36) + Math.random().toString(36).substr(2);
-      };
+      const addButton = document.getElementById("add-button");
+      const flashcardContainer = document.getElementById("flashcard-container");
 
-      // Load flashcards from localStorage on page load
-      const savedFlashcards =
-        JSON.parse(localStorage.getItem("flashcards")) || [];
+      let flashcards = [];
 
-      // Add an example flashcard if no flashcards exist
-      if (savedFlashcards.length === 0) {
-        addItem();
+      // Load flashcards from local storage on page load
+      const storedFlashcards = localStorage.getItem("flashcards");
+      if (storedFlashcards) {
+        flashcards = JSON.parse(storedFlashcards);
+        renderFlashcards();
       }
 
-      // populate UI with saved flashcards
-      savedFlashcards.forEach((flashcard) =>
-        addItem(flashcard.title, flashcard.description, flashcard.id)
-      );
+      addButton.addEventListener("click", () => {
+        const newFlashcard = {
+          term: "",
+          description: "",
+        };
+        flashcards.push(newFlashcard);
+        renderFlashcards();
+        saveFlashcardsToLocalStorage();
+      });
 
-      function addItemFromUI() {
-        const id = uid()
-        const fc = addItem("Term", "Description", id);
-        addToLocalStorage(fc);
+      function renderFlashcards() {
+        flashcardContainer.innerHTML = "";
+        flashcards.forEach((flashcard, index) => {
+          const flashcardElement = document.createElement("div");
+          //flashcardElement.classList.add("flashcard");
+          flashcardElement.className = "d-flex mb-3 flashcard"
+
+          const termElement = document.createElement("h3");
+          termElement.classList.add("term");
+          termElement.textContent = flashcard.term;
+          termElement.setAttribute("contenteditable", true);
+          termElement.addEventListener("input", () => {
+            flashcards[index].term = termElement.textContent;
+            saveFlashcardsToLocalStorage();
+          });
+          flashcardElement.appendChild(termElement);
+
+          const descriptionElement = document.createElement("div");
+          descriptionElement.classList.add("description");
+          descriptionElement.textContent = flashcard.description;
+          descriptionElement.setAttribute("contenteditable", true);
+          descriptionElement.addEventListener("input", () => {
+            flashcards[index].description = descriptionElement.textContent;
+            saveFlashcardsToLocalStorage();
+          });
+          flashcardElement.appendChild(descriptionElement);
+
+          const removeButton = document.createElement("button");
+          removeButton.classList.add("btn-close");
+          removeButton.classList.add("d-print-none");
+          removeButton.addEventListener("click", () => {
+            flashcards.splice(index, 1);
+            renderFlashcards();
+            saveFlashcardsToLocalStorage();
+          });
+          flashcardElement.appendChild(removeButton);
+
+          flashcardContainer.appendChild(flashcardElement);
+        });
       }
 
-      function addItem(title = "Term", description = "Description", id = 0) {
-        if (title && description) {
-          const newItemDiv = document.createElement("div");
-          newItemDiv.className = "d-flex mb-3 flashcard";
-          newItemDiv.innerHTML = `
-                    <div class="term"><h3 contenteditable="true">${title}</h3></div>
-                    <div class="description" contenteditable="true">${description}</div>
-                    <div class="tool d-print-none"><button type="button" class="btn-close" aria-label="Remove" onclick="removeFlashcard(this.parentNode.parentNode, '${id}')"></button></div>
-                `;
-          document.getElementById("itemList").appendChild(newItemDiv);
-          return { title, description, id };
-        } else {
-          return {};
-        }
+      function deleteAllFlashcards() {
+        flashcards = [];
+        renderFlashcards();
+        saveFlashcardsToLocalStorage();
       }
 
-      // Save flashcard to localStorage
-      function addToLocalStorage(item) {
-        const flashcards = JSON.parse(localStorage.getItem("flashcards")) || [];
-        flashcards.push(item);
+      function saveFlashcardsToLocalStorage() {
         localStorage.setItem("flashcards", JSON.stringify(flashcards));
-      }
-
-      function removeFlashcard(flashcardElement, id) {
-        let flashcardContainer = document.getElementById("itemList");
-        flashcardContainer.removeChild(flashcardElement);
-
-        // Update localStorage
-        const flashcards = JSON.parse(localStorage.getItem("flashcards")) || [];
-        const flashcardsNew = flashcards.filter((fc) => fc.id !== id);
-        localStorage.setItem("flashcards", JSON.stringify(flashcardsNew));
       }
     </script>
   </body>
