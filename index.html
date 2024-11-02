@@ -52,25 +52,23 @@
     </style>
   </head>
   <body>
-    <div class="container d-print-none">
-      <h1 class="text-body-emphasis pt-5 pb-3">
+    <div class="container d-print-none text-center my-3">
+      <h1 class="text-body-emphasis pt-5 pb-3 display-5 fw-bold">
         Create Flashcards Online for Free
       </h1>
-      <p class="fs-5 col-md-8">
+      <p class="fs-5 col-md-8 lead text-center mx-auto">
         Create and print custom flashcards for any subject. Simply add your
         terms, questions and definitions, and start studying immediately. No
         Account Needed.
       </p>
-
-      <hr />
     </div>
 
     <div id="flashcard-container" class="container py-3"></div>
 
     <div class="container d-print-none">
       <div class="d-flex justify-content-center">
-        <button type="button" class="btn btn-primary" id="add-button">
-          Add Flashcard
+        <button type="button" class="btn btn-lg btn-primary" id="add-button">
+          + Add Flashcard
         </button>
         &nbsp;
         <button
@@ -80,8 +78,13 @@
         >
           Print 🖨️
         </button>
+        &nbsp;
+        <button type="button" class="btn btn-outline-success disabled">
+          Study Mode (coming soon)
+        </button>
         <br />
       </div>
+
       <p class="text-center py-1 text-secondary">
         Print for hands-on experience, or turn into PDF.
       </p>
@@ -93,6 +96,59 @@
         >
           Delete all Flashcards
         </button>
+      </div>
+    </div>
+
+
+    <div class="container">
+      <div class="row g-5">
+        <hr />
+        <div class="col-md-6">
+          <h2 class="text-body-emphasis">About flashcard-maker.info</h2>
+          <p>
+            Nearly all of flashcard generators require an account, payment or
+            subscription. Empowering educators and learners worldwide, we
+            provide a free, unlimited flashcard generator.
+          </p>
+          <ul>
+            <li>👍 Free</li>
+            <li>👍 No Account Necessary</li>
+            <li>👍 Flashcards Stored Locally in Browser</li>
+            <li>👍 Study Mode (coming soon)</li>
+            <li>👍 Print Layout</li>
+          </ul>
+          <div class="alert alert-warning" role="alert">
+            <strong>Tip:</strong> Bookmark this page now
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <h2 class="text-body-emphasis">
+            Benefits of Studying with Flashcards
+          </h2>
+          <ul>
+            <li>
+              <strong>Effective Learning:</strong> Flashcards promote active
+              recall and personalized learning.
+            </li>
+            <li>
+              <strong>Improved Memory:</strong> Spaced repetition and chunking
+              enhance long-term retention.
+            </li>
+            <li>
+              <strong>Efficient Study:</strong> Portable, focused, and quick
+              review.
+            </li>
+            <li>
+              <strong>Versatile Tool:</strong> Use flashcards for any subject
+              and exam preparation.
+            </li>
+            <li>
+              <strong>Engaging Study:</strong> Gamification and customization
+              make learning fun.
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
 
@@ -124,7 +180,7 @@
         flashcards.forEach((flashcard, index) => {
           const flashcardElement = document.createElement("div");
           //flashcardElement.classList.add("flashcard");
-          flashcardElement.className = "d-flex mb-3 flashcard"
+          flashcardElement.className = "d-flex mb-3 flashcard";
 
           const termElement = document.createElement("h3");
           termElement.classList.add("term");
